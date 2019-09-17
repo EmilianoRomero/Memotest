@@ -89,7 +89,7 @@ const fichas = [{
         link: 'https://es.wikipedia.org/wiki/Triceratops',
     },
     {
-        nombre: 'tyrannosaurusrex',
+        nombre: 'tyrannosaurus rex',
         img: 'img/tyrannosaurusrex.png',
         link: 'https://es.wikipedia.org/wiki/Tyrannosaurus_rex',
     },
@@ -101,70 +101,124 @@ const fichas = [{
 ];
 console.log(fichas);
 
-gameGrid = fichas.concat(fichas);
-gameGrid.sort(() => 0.5 - Math.random());
+const gameGrid = fichas
+    .concat(fichas)
+    .sort(() => 0.5 - Math.random());
 
-const contenedor = document.getElementById('contenedor');
+let firstGuess = '';
+let secondGuess = '';
+let count = 0;
+let previousTarget = null;
+let delay = 3000;
 
-const backgroundImage = document.createElement('div');
-backgroundImage.setAttribute('class', 'backg');
-contenedor.appendChild(backgroundImage);
-
+const tablero = document.getElementById('tablero');
 const grid = document.createElement('section');
 grid.setAttribute('class', 'grid');
-contenedor.appendChild(grid);
+tablero.appendChild(grid);
 
 gameGrid.forEach(item => {
+    const {
+        nombre,
+        img
+    } = item;
+
     const ficha = document.createElement('div');
     ficha.classList.add('ficha');
-    ficha.dataset.nombre = item.nombre;
-    ficha.style.backgroundImage = `url(${item.img})`;
+    ficha.dataset.name = nombre;
+
+    const front = document.createElement('div');
+    front.classList.add('front');
+    front.style.backgroundImage = `url(${'img/Canvas01.png'})`;
+
+    const back = document.createElement('div');
+    back.classList.add('back');
+    back.style.backgroundImage = `url(${img})`;
+
+    const texto = document.createElement('H2');
+    texto.id = 'elnombre';
+    texto.classList.add('elnombre');
+    texto.textContent = `${nombre}`;
+    back.appendChild(texto);
+
     grid.appendChild(ficha);
-})
-
-
-let primerIntento = ''
-let segundoIntento = ''
-
-grid.addEventListener('click', function (event) {
-    let clicked = event.target;
-    let count = 0;
-    if (count < 2) {
-        count++
-        clicked.classList.add('selected')
-    }
-    if (clicked.nodeName === 'section') {
-        return
-    }
-    clicked.classList.add('selected')
-
-    if (count < 2) {
-        count++
-        if (count === 1) {
-            primerIntento = clicked.dataset.name;
-            clicked.classList.add('selected');
-        } else {
-            segundoIntento = clicked.dataset.name;
-            clicked.classList.add('selected');
-        }
-        if (primerIntento !== '' && segundoIntento !== '') {
-            if (primerIntento === segundoIntento) {
-                match()
-            }
-        }
-    }
-})
+    ficha.appendChild(front);
+    ficha.appendChild(back);
+});
 
 const match = () => {
-    var selected = document.querySelectorAll('.selected');
+    const selected = document.querySelectorAll('.selected');
     selected.forEach(ficha => {
         ficha.classList.add('match')
-    })
-    let previousTarget = null
-    if (primerIntento !== '' && segundoIntento !== '') {
-        if (primerIntento === segundoIntento) {
-            match();
-        }
+    });
+};
+
+const resetGuesses = () => {
+    firstGuess = '';
+    secondGuess = '';
+    count = 0;
+    previousTarget = null;
+
+    var selected = document.querySelectorAll('.selected');
+    selected.forEach(ficha => {
+        ficha.classList.remove('selected');
+    });
+};
+
+grid.addEventListener('click', event => {
+
+    const clicked = event.target;
+
+    if (
+        clicked.nodeName === 'SECTION' ||
+        clicked === previousTarget ||
+        clicked.parentNode.classList.contains('selected') ||
+        clicked.parentNode.classList.contains('match')
+    ) {
+        return;
     }
-    previousTarget = clicked;
+
+    if (count < 2) {
+        count++;
+        if (count === 1) {
+            firstGuess = clicked.parentNode.dataset.name;
+            console.log(firstGuess);
+            clicked.parentNode.classList.add('selected');
+        } else {
+            secondGuess = clicked.parentNode.dataset.name;
+            console.log(secondGuess);
+            clicked.parentNode.classList.add('selected');
+        }
+
+        if (firstGuess && secondGuess) {
+            if (firstGuess === secondGuess) {
+                setTimeout(match, delay);
+                soundOnMatch();
+            }
+            setTimeout(resetGuesses, delay);
+        }
+        previousTarget = clicked;
+    }
+});
+
+function sound(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+      this.sound.play();
+    }
+    this.stop = function(){
+      this.sound.pause();
+    }
+  };
+
+  function soundOnMatch() {
+    const mySound = new sound('Raptorcall.mp3');
+    if (firstGuess === secondGuess) {
+        mySound.play();
+        return;
+    }
 }
