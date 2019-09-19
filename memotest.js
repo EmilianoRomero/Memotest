@@ -109,7 +109,7 @@ let firstGuess = '';
 let secondGuess = '';
 let count = 0;
 let previousTarget = null;
-let delay = 3000;
+let delay = 2400;
 
 const tablero = document.getElementById('tablero');
 const grid = document.createElement('section');
@@ -149,6 +149,8 @@ const match = () => {
     const selected = document.querySelectorAll('.selected');
     selected.forEach(ficha => {
         ficha.classList.add('match')
+        //console.log('Ey! Hay un match');
+        //soundOnMatch(); Sonido y mensaje llegan tarde
     });
 };
 
@@ -174,6 +176,8 @@ grid.addEventListener('click', event => {
         clicked.parentNode.classList.contains('selected') ||
         clicked.parentNode.classList.contains('match')
     ) {
+        console.log('here i am!'); //QUÉ HACE ESTA?
+        //--> SALTA CUANDO CLICKEO LAS FICHAS YA SALIDAS!!! LAS FICHAS QUE YA TIENEN CLASS match
         return;
     }
 
@@ -183,18 +187,26 @@ grid.addEventListener('click', event => {
             firstGuess = clicked.parentNode.dataset.name;
             console.log(firstGuess);
             clicked.parentNode.classList.add('selected');
+            console.log("primera ficha seleccionada!")
         } else {
             secondGuess = clicked.parentNode.dataset.name;
             console.log(secondGuess);
             clicked.parentNode.classList.add('selected');
+            console.log('segunda ficha seleccionada!')
         }
 
         if (firstGuess && secondGuess) {
             if (firstGuess === secondGuess) {
                 setTimeout(match, delay);
-                soundOnMatch();
+                //Se produce un match -- Sonido con delay
+                console.log('Ey! Hay un match');
             }
             setTimeout(resetGuesses, delay);
+            //Executes a function, after waiting a specified number of milliseconds.
+            //setTimeout(function, milliseconds);
+            //Acá el sonido y el mensaje llegan a tiempo con el match!
+            soundOnMatch();
+            finDelJuego(); //LLAMA A FIN DEL JUEGO DESPUÉS DE CADA JUGADA - SIIIIII!!!!
         }
         previousTarget = clicked;
     }
@@ -207,18 +219,85 @@ function sound(src) {
     this.sound.setAttribute("controls", "none");
     this.sound.style.display = "none";
     document.body.appendChild(this.sound);
-    this.play = function(){
-      this.sound.play();
+    this.play = function () {
+        this.sound.play();
     }
-    this.stop = function(){
-      this.sound.pause();
+    this.stop = function () {
+        this.sound.pause();
     }
-  };
+};
 
-  function soundOnMatch() {
+function soundOnMatch() {
     const mySound = new sound('Raptorcall.mp3');
     if (firstGuess === secondGuess) {
         mySound.play();
         return;
     }
 }
+
+const finDelJuego = () => {
+    let fichasL = fichas.length;
+    let referencia = ((fichasL - 1) * 2);
+    console.log(fichasL);
+    console.log(referencia);
+    var matches = document.querySelectorAll('.match');
+    let matchesL = matches.length;
+    console.log(matches);
+    console.log(matches.length); //QUE DEVUELVA LA CANTIDAD DE ELEMENTOS CON .match
+    matches.forEach(ficha => {
+        ficha.classList.contains('match');
+    });
+    if (matchesL == referencia) {
+        console.log('fin del juego'); //QUE DISPARE FIN DEL JUEGO!!! - SIIIIII!!!
+
+        const popup = document.createElement('div');
+        popup.className = 'popup';
+        popup.id = 'popup';
+
+        const finish = document.createElement('div');
+        finish.className = 'cancel';
+        finish.innerHTML = 'X';
+
+        const restart = document.createElement('button');
+        restart.className = 'restart';
+        restart.innerHTML = 'Comenzar nuevo juego';
+
+        const congrats = document.createElement('H1');
+        congrats.className = 'congrats';
+        congrats.innerHTML = '¡Muy bien hecho!';
+
+        const popupimg = document.createElement('img');
+        popupimg.className = 'popupimg';
+        popupimg.style.backgroundImage = `url(${'img/dancingdino.gif'})`;
+
+        popup.appendChild(finish);
+        popup.appendChild(restart);
+        popup.appendChild(congrats);
+        popup.appendChild(popupimg);
+
+        grid.appendChild(popup);
+
+        openPopUp();
+        console.log('openPopUp es disparada!');
+    }
+};
+
+function openPopUp() {
+    document.querySelector('.popup').style.display = 'grid';
+    console.log('openPopUp funciona!');
+    //.parentNode.removeChild(popup);
+};
+
+function closePopUp() {
+    document.querySelector('.cancel').addEventListener('click', closePopUp).style.display = 'none';
+    console.log('closePopUp funciona!');
+    //.parentNode.removeChild(popup);
+};
+
+function startNewGame() {
+    document.querySelector('.restart').addEventListener('click', closePopUp, startNewGame);
+    fichas
+        .concat(fichas)
+        .sort(() => 0.5 - Math.random())
+    console.log('startNewGame funciona!');
+};

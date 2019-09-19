@@ -1,105 +1,3 @@
-/*
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-body,
-html {
-  height          : 100%;
-  margin          : 0;
-  background-color: rgb(7, 26, 54)
-}
-
-.backg {
-  background-image : url('img/background.jpg');
-  height           : 100%;
-  background-repeat: repeat;
-  background-size  : cover;
-  position         : absolute;
-}
-
-.grid {
-  max-width       : 960px;
-  margin          : 0 auto;
-  display         : -webkit-box;
-  display         : -ms-flexbox;
-  display         : flex;
-  -ms-flex-wrap   : wrap;
-  flex-wrap       : wrap;
-  -webkit-box-pack: space-evenly;
-  -ms-flex-pack   : space-evenly;
-  justify-content : space-evenly;
-}
-
-.ficha {
-  margin                 : 5px;
-  background-color       : #009900;
-  background-size        : contain;
-  background-repeat      : no-repeat;
-  background-position    : center center;
-  position               : relative;
-  border-radius          : 12px;
-  border                 : 4px solid rgb(30, 185, 224);
-  -webkit-transition     : all .4s linear;
-  -o-transition          : all .4s linear;
-  transition             : all .4s linear;
-  -webkit-transform-style: preserve-3d;
-  transform-style        : preserve-3d;
-  margin                 : 5px;
-}
-
-.ficha,
-.front,
-.back {
-  height: 150px;
-  width : 200px;
-}
-
-.back,
-.front {
-  position                   : absolute;
-  -webkit-backface-visibility: hidden;
-  backface-visibility        : hidden;
-}
-
-.selected {
-  border: 8px solid rgb(255, 0, 234);
-}
-
-.match {
-  border          : 8px solid rgb(157, 255, 0);
-  background-image: none !important;
-}
-
-.front {
-  background         : #FAB942 url('img/dinorunning01.gif');
-  background-repeat  : no-repeat;
-  background-position: center center;
-  background-size    : cover;
-}
-
-.back {
-  -webkit-transform  : rotateY(180deg);
-  transform          : rotateY(180deg);
-  background-color   : #6589F9;
-  background-size    : contain;
-  background-repeat  : no-repeat;
-  background-position: center center;
-  z-index            : 1;
-}
-
-.selected {
-  -webkit-transform: rotateY(180deg);
-  transform        : rotateY(180deg);
-}
-
-.match .front {
-  background: #6589F9 !important;
-}
-*/
-
 *,
 *::before,
 *::after {
@@ -109,22 +7,34 @@ html {
 
 body,
 html {
-  height          : 100%;
+  width           : 100%;
+  height          : auto;
   margin          : 0;
   background-color: rgb(7, 26, 54);
 }
 
-.backg {
-  background-image : url('img/background.jpg');
-  height           : 100%;
-  background-repeat: repeat;
-  background-size  : cover;
-  position         : absolute;
+.container {
+  position      : relative;
+  display       : flex;
+  flex-direction: column;
+  place-content : center;
+  width         : 85%;
+  height        : auto;
+  max-width     : 100%;
+  margin-top    : 50px;
+  margin-bottom : 50px;
 }
 
 .grid {
-  max-width       : 960px;
   margin          : 0 auto;
+  padding-top     : 20px;
+  padding-bottom  : 20px;
+  position        : relative;
+  border          : Solid 12px #ebe5e5;
+  border-radius   : 12px;
+  width           : 100%;
+  max-width       : 100%;
+  height          : auto;
   display         : -webkit-box;
   display         : -ms-flexbox;
   display         : flex;
@@ -143,13 +53,16 @@ html {
   -webkit-transform-style: preserve-3d;
   transform-style        : preserve-3d;
   margin                 : 5px;
+  margin-top             : 10px;
+  margin-bottom          : 10px;
 }
 
 .ficha,
 .back,
 .front {
-  height: 180px;
-  width : 300px;
+  object-fit   : cover;
+  height       : 180px;
+  width        : 300px;
   border-radius: 12px;
 }
 
@@ -186,12 +99,105 @@ html {
 }
 
 .elnombre {
-  position: relative;
-  text-align: left;
-  color: red;
-  margin-top: 135px;
-  margin-left: 20px;
+  font-size     : 2vw;
+  font-variant  : small-caps;
+  position      : relative;
+  text-align    : left;
+  text-shadow   : 2px 2px rgb(243, 50, 82);
+  margin-top    : 135px;
+  margin-left   : 20px;
   text-transform: capitalize;
-  font-family: 'Saira Semi Condensed', sans-serif;
-  text-shadow: 2px 2px rgb(255, 255, 92);
+  font-family   : 'Saira Semi Condensed', sans-serif;
+  color         : rgb(0, 0, 0);
+}
+
+.popup {
+  position: fixed;
+  grid-column-gap: 10px;
+  grid-row-gap: 5px;
+  position        : relative;
+  width           : 600px;
+  height          : 600px;
+  top             : 0px;
+  left            : 0px;
+  font-family     : 'Saira Semi Condensed', sans-serif;
+  background-color: rgb(240, 240, 240);
+  border          : 12px solid #009900;
+  border-radius: 12px;
+  z-index         : 100000000000000000;
+  display         : none
+}
+
+.cancel
+{
+  cursor:pointer;
+  margin:0;
+  float:right;
+  height:25px;
+  width:60px;
+  background-color:#009900;
+  text-align:center;
+  font-weight:bold;
+  font-size:15px;
+  color:white;
+  border-radius:8px;
+  z-index:100000000000000000;
+  grid-column-start: 1;
+  grid-row-start: 1;
+  margin-top: 5px;
+  margin-right: 5px;
+  justify-self: right; 
+}
+
+.restart
+{
+  display:relative;
+  cursor:pointer;
+  margin:0;
+  float:left;
+  height:50px;
+  width:100px;
+  padding:0 0 5px 0;
+  background-color:#009900;
+  text-align:center;
+  font-weight:bold;
+  font-size:15px;
+  color:white;
+  border-radius:8px;
+  z-index:100000000000000000;
+  grid-column-start: 1;
+  grid-row-start: 3;
+  justify-self: center;
+  margin-bottom: 3px;
+}
+
+.cancel:hover,
+.restart:hover 
+{
+  background:rgb(255,50,50);
+  }
+
+  .popupimg
+{
+  margin:0;
+  height:450px;
+  width: 480px;
+  padding:0;
+  background-color:#d3d3d3;
+  border-radius:8px;
+  z-index: 1;
+  grid-column-start: 1;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  justify-self: center;
+}
+
+.congrats
+{
+margin-top: 5px;
+margin-bottom: 0px;
+justify-self: center;
+grid-column-start: 1;
+grid-row-start: 1;
+grid-row-end: 2; 
 }
