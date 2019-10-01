@@ -298,8 +298,15 @@ const finDelJuego = (grid) => {
         function openPopUp() {
             document.querySelector('.popup').style.display = 'grid';
             console.log('openPopUp funciona!');
+            soundOnFinish();
             //.parentNode.removeChild(popup);
         };
+
+        function soundOnFinish() {
+            const mySound = new sound('dinosuargrowl.mp3');
+            mySound.play();
+            return;
+        }
 
         document.getElementById('cancel').addEventListener('click', function () {
             window.close();
