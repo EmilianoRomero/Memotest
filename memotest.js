@@ -29,72 +29,72 @@ const fichas = [{
         link: 'https://es.wikipedia.org/wiki/Australovenator_wintonensis',
     },
     {
-        nombre: 'brachiosaurus',
+        nombre: 'Brachiosaurus',
         img: 'img/brachiosaurus.png',
         link: 'https://es.wikipedia.org/wiki/Brachiosaurus_altithorax',
     },
     {
-        nombre: 'coelophysis',
+        nombre: 'Coelophysis',
         img: 'img/coelophysis.png',
         link: 'https://es.wikipedia.org/wiki/Coelophysis',
     },
     {
-        nombre: 'cryolophosaurus',
+        nombre: 'Cryolophosaurus',
         img: 'img/cryolophosaurus.png',
         link: 'https://es.wikipedia.org/wiki/Cryolophosaurus_ellioti',
     },
     {
-        nombre: 'diamantinasaurus',
+        nombre: 'Diamantinasaurus',
         img: 'img/diamantinasaurus.png',
         link: 'https://es.wikipedia.org/wiki/Diamantinasaurus_matildae',
     },
     {
-        nombre: 'dilophosaurus',
+        nombre: 'Dilophosaurus',
         img: 'img/dilophosaurus.png',
         link: 'https://es.wikipedia.org/wiki/Dilophosaurus_wetherilli',
     },
     {
-        nombre: 'liopleurodon',
+        nombre: 'Liopleurodon',
         img: 'img/liopleurodon.png',
         link: 'https://es.wikipedia.org/wiki/Liopleurodon',
     },
     {
-        nombre: 'plesiosaurus',
+        nombre: 'Plesiosaurus',
         img: 'img/plesiosaurus.png',
         link: 'https://es.wikipedia.org/wiki/Plesiosaurus',
     },
     {
-        nombre: 'saltasaurus',
+        nombre: 'Saltasaurus',
         img: 'img/saltasaurus.png',
         link: 'https://es.wikipedia.org/wiki/Saltasaurus',
     },
     {
-        nombre: 'spinosaurus',
+        nombre: 'Spinosaurus',
         img: 'img/spinosaurus.png',
         link: 'https://es.wikipedia.org/wiki/Spinosaurus',
     },
     {
-        nombre: 'stegosaurus',
+        nombre: 'Stegosaurus',
         img: 'img/stegosaurus.png',
         link: 'https://es.wikipedia.org/wiki/Stegosaurus',
     },
     {
-        nombre: 'therizinosaurus',
+        nombre: 'Therizinosaurus',
         img: 'img/therizinosaurus.png',
         link: 'https://es.wikipedia.org/wiki/Therizinosaurus',
     },
     {
-        nombre: 'triceratops',
+        nombre: 'Triceratops',
         img: 'img/triceratops.png',
         link: 'https://es.wikipedia.org/wiki/Triceratops',
     },
     {
-        nombre: 'tyrannosaurus rex',
+        nombre: 'Tyrannosaurus rex',
         img: 'img/tyrannosaurusrex.png',
         link: 'https://es.wikipedia.org/wiki/Tyrannosaurus_rex',
     },
     {
-        nombre: 'velociraptor',
+        nombre: 'Velociraptor',
         img: 'img/velociraptor.png',
         link: 'https://es.wikipedia.org/wiki/Velociraptor',
     }
@@ -111,39 +111,44 @@ let count = 0;
 let previousTarget = null;
 let delay = 2400;
 
-const tablero = document.getElementById('tablero');
-const grid = document.createElement('section');
-grid.setAttribute('class', 'grid');
-tablero.appendChild(grid);
+//CREAR TABLERO
+function crearTablero() {
+    const tablero = document.getElementById('tablero');
+    const grid = document.createElement('section');
+    grid.setAttribute('class', 'grid');
+    tablero.appendChild(grid);
 
-gameGrid.forEach(item => {
-    const {
-        nombre,
-        img
-    } = item;
+    gameGrid.forEach(item => {
+        const {
+            nombre,
+            img
+        } = item;
 
-    const ficha = document.createElement('div');
-    ficha.classList.add('ficha');
-    ficha.dataset.name = nombre;
+        const ficha = document.createElement('div');
+        ficha.classList.add('ficha');
+        ficha.dataset.name = nombre;
 
-    const front = document.createElement('div');
-    front.classList.add('front');
-    front.style.backgroundImage = `url(${'img/Canvas01.png'})`;
+        const front = document.createElement('div');
+        front.classList.add('front');
+        front.style.backgroundImage = `url(${'img/Canvas01.png'})`;
 
-    const back = document.createElement('div');
-    back.classList.add('back');
-    back.style.backgroundImage = `url(${img})`;
+        const back = document.createElement('div');
+        back.classList.add('back');
+        back.style.backgroundImage = `url(${img})`;
 
-    const texto = document.createElement('H2');
-    texto.id = 'elnombre';
-    texto.classList.add('elnombre');
-    texto.textContent = `${nombre}`;
-    back.appendChild(texto);
+        const texto = document.createElement('H2');
+        texto.id = 'elnombre';
+        texto.classList.add('elnombre');
+        texto.textContent = `${nombre}`;
+        back.appendChild(texto);
 
-    grid.appendChild(ficha);
-    ficha.appendChild(front);
-    ficha.appendChild(back);
-});
+        grid.appendChild(ficha);
+        ficha.appendChild(front);
+        ficha.appendChild(back);
+    });
+    clickingFichas(grid);
+};
+crearTablero()
 
 const match = () => {
     const selected = document.querySelectorAll('.selected');
@@ -166,51 +171,51 @@ const resetGuesses = () => {
     });
 };
 
-grid.addEventListener('click', event => {
-
-    const clicked = event.target;
-
-    if (
-        clicked.nodeName === 'SECTION' ||
-        clicked === previousTarget ||
-        clicked.parentNode.classList.contains('selected') ||
-        clicked.parentNode.classList.contains('match')
-    ) {
-        console.log('here i am!'); //QUÉ HACE ESTA?
-        //--> SALTA CUANDO CLICKEO LAS FICHAS YA SALIDAS!!! LAS FICHAS QUE YA TIENEN CLASS match
-        return;
-    }
-
-    if (count < 2) {
-        count++;
-        if (count === 1) {
-            firstGuess = clicked.parentNode.dataset.name;
-            console.log(firstGuess);
-            clicked.parentNode.classList.add('selected');
-            console.log("primera ficha seleccionada!")
-        } else {
-            secondGuess = clicked.parentNode.dataset.name;
-            console.log(secondGuess);
-            clicked.parentNode.classList.add('selected');
-            console.log('segunda ficha seleccionada!')
+function clickingFichas(grid) {
+    grid.addEventListener('click', event => {
+        const clicked = event.target;
+        if (
+            clicked.nodeName === 'SECTION' ||
+            clicked === previousTarget ||
+            clicked.parentNode.classList.contains('selected') ||
+            clicked.parentNode.classList.contains('match')
+        ) {
+            console.log('here i am!'); //QUÉ HACE ESTA?
+            //--> SALTA CUANDO CLICKEO LAS FICHAS YA SALIDAS!!! LAS FICHAS QUE YA TIENEN CLASS match
+            return;
         }
-
-        if (firstGuess && secondGuess) {
-            if (firstGuess === secondGuess) {
-                setTimeout(match, delay);
-                //Se produce un match -- Sonido con delay
-                console.log('Ey! Hay un match');
+        if (count < 2) {
+            count++;
+            if (count === 1) {
+                firstGuess = clicked.parentNode.dataset.name;
+                console.log(firstGuess);
+                clicked.parentNode.classList.add('selected');
+                console.log("primera ficha seleccionada!");
+                soundOnClick();
+            } else {
+                secondGuess = clicked.parentNode.dataset.name;
+                console.log(secondGuess);
+                clicked.parentNode.classList.add('selected');
+                console.log('segunda ficha seleccionada!');
+                soundOnClick();
             }
-            setTimeout(resetGuesses, delay);
-            //Executes a function, after waiting a specified number of milliseconds.
-            //setTimeout(function, milliseconds);
-            //Acá el sonido y el mensaje llegan a tiempo con el match!
-            soundOnMatch();
-            finDelJuego(); //LLAMA A FIN DEL JUEGO DESPUÉS DE CADA JUGADA - SIIIIII!!!!
+            if (firstGuess && secondGuess) {
+                if (firstGuess === secondGuess) {
+                    setTimeout(match, delay);
+                    //Se produce un match -- Sonido con delay
+                    console.log('Ey! Hay un match');
+                }
+                setTimeout(resetGuesses, delay);
+                //Executes a function, after waiting a specified number of milliseconds.
+                //setTimeout(function, milliseconds);
+                //Acá el sonido y el mensaje llegan a tiempo con el match!
+                soundOnMatch();
+                finDelJuego(grid); //LLAMA A FIN DEL JUEGO DESPUÉS DE CADA JUGADA - SIIIIII!!!!
+            }
+            previousTarget = clicked;
         }
-        previousTarget = clicked;
-    }
-});
+    });
+}
 
 function sound(src) {
     this.sound = document.createElement("audio");
@@ -235,7 +240,14 @@ function soundOnMatch() {
     }
 }
 
-const finDelJuego = () => {
+function soundOnClick() {
+    const mySound = new sound('DinosaurFootstep.mp3');
+    mySound.play();
+    return;
+}
+
+
+const finDelJuego = (grid) => {
     let fichasL = fichas.length;
     let referencia = ((fichasL - 1) * 2);
     console.log(fichasL);
@@ -255,10 +267,12 @@ const finDelJuego = () => {
         popup.id = 'popup';
 
         const finish = document.createElement('div');
+        finish.id = 'cancel';
         finish.className = 'cancel';
-        finish.innerHTML = 'X';
+        finish.innerHTML = 'Cerrar';
 
         const restart = document.createElement('button');
+        restart.id = 'restart';
         restart.className = 'restart';
         restart.innerHTML = 'Comenzar nuevo juego';
 
@@ -279,25 +293,24 @@ const finDelJuego = () => {
 
         openPopUp();
         console.log('openPopUp es disparada!');
+
+
+        function openPopUp() {
+            document.querySelector('.popup').style.display = 'grid';
+            console.log('openPopUp funciona!');
+            //.parentNode.removeChild(popup);
+        };
+
+        document.getElementById('cancel').addEventListener('click', function () {
+            window.close();
+            console.log('cerrar Ventana funciona!');
+        });
+
+        document.getElementById('restart').addEventListener('click', function () {
+            document.querySelector('.grid').style.display = 'none';
+            console.log('startNewGame funciona!');
+            location.reload();
+            //crearTablero();
+        });
     }
-};
-
-function openPopUp() {
-    document.querySelector('.popup').style.display = 'grid';
-    console.log('openPopUp funciona!');
-    //.parentNode.removeChild(popup);
-};
-
-function closePopUp() {
-    document.querySelector('.cancel').addEventListener('click', closePopUp).style.display = 'none';
-    console.log('closePopUp funciona!');
-    //.parentNode.removeChild(popup);
-};
-
-function startNewGame() {
-    document.querySelector('.restart').addEventListener('click', closePopUp, startNewGame);
-    fichas
-        .concat(fichas)
-        .sort(() => 0.5 - Math.random())
-    console.log('startNewGame funciona!');
 };
